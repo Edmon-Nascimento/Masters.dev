@@ -1,6 +1,6 @@
 package objects;
 
-public class HomeAreaCalculator {
+public class RectangleAreaCalculator {
     static void main(String[] args) {
 
         Rectangle rectangle = new Rectangle();
