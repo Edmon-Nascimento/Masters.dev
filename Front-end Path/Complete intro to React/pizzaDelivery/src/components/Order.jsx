@@ -1,10 +1,34 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Pizza from "./Pizza";
 
+const intl = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+});
+
 export default function Order() {
+  const [pizzaTypes, setPizzaTypes] = useState([]);
   const [pizzaType, setPizzaType] = useState("Pepperoni");
   const [pizzaSize, setPizzaSize] = useState("Medium");
+  const [loading, setLoading] = useState(true);
+
+  let price, selectedPizza;
+
+  if (!loading) {
+    selectedPizza = pizzaTypes.find((pizza) => pizza.name === pizzaType);
+  }
+
+  useEffect(() => {
+    async function fetchPizzaTypes() {
+      const response = await fetch("/api/pizzas");
+      const data = await response.json();
+      
+      setPizzaTypes(data);
+      setLoading(false);
+    }
+    fetchPizzaTypes();
+  }, []);
 
   return (
     <div className="order">
@@ -13,10 +37,17 @@ export default function Order() {
         <div>
           <div>
             <label htmlFor="pizza-type">Pizza Type:</label>
-            <select name="pizza-type" id="pizza-type" value={pizzaType} onChange = {(e) => setPizzaType(e.target.value)}>
-              <option value="Pepperoni">Pepperoni</option>
-              <option value="Margherita">Margherita</option>
-              <option value="Hawaiian">Hawaiian</option>
+            <select
+              name="pizza-type"
+              id="pizza-type"
+              value={pizzaType}
+              onChange={(e) => setPizzaType(e.target.value)}
+            >
+              {pizzaTypes.map((pizza) => (
+                <option key={pizza.name} value={pizza.id}>
+                  {pizza.name}
+                </option>
+              ))}
             </select>
           </div>
           <div>
@@ -41,7 +72,7 @@ export default function Order() {
                   value="Medium"
                   id="medium"
                   checked={pizzaSize === "Medium"}
-                    onChange={(e) => setPizzaSize(e.target.value)}
+                  onChange={(e) => setPizzaSize(e.target.value)}
                 />
                 <label htmlFor="medium">Medium</label>
               </span>
