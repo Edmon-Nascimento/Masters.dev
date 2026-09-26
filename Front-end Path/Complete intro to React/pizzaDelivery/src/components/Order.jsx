@@ -16,18 +16,17 @@ export default function Order() {
   let price, selectedPizza;
 
   if (!loading) {
-    selectedPizza = pizzaTypes.find((pizza) => pizza.name === pizzaType);
+    selectedPizza = pizzaTypes.find((pizza) => pizzaType === pizza.id);
+    price = intl.format(selectedPizza.sizes[pizzaSize]);
   }
 
   useEffect(() => {
-    async function fetchPizzaTypes() {
-      const response = await fetch("/api/pizzas");
-      const data = await response.json();
-      
-      setPizzaTypes(data);
-      setLoading(false);
-    }
-    fetchPizzaTypes();
+    fetch("/api/pizzas")
+      .then((response) => response.json())
+      .then((data) => {
+        setPizzaTypes(data);
+        setLoading(false);
+      });
   }, []);
 
   return (
@@ -92,15 +91,16 @@ export default function Order() {
           </div>
           <button type="submit">Add to Cart</button>
           <div className="order-pizza">
-            <Pizza
-              name={pizzaType}
-              description={`${pizzaSize} size`}
-              image={`/public/pizzas/${pizzaType.toLowerCase()}.webp`}
-            />
-            <p>
-              Price: $
-              {pizzaSize === "Small" ? 8 : pizzaSize === "Medium" ? 10 : 12}
-            </p>
+            {loading ? (
+              <p>Loading...</p>
+            ) : (
+              <Pizza
+                name={selectedPizza.name}
+                description={selectedPizza.description}
+                image={selectedPizza.image}
+              />
+            )}
+            <p>{price}</p>
           </div>
         </div>
       </form>
