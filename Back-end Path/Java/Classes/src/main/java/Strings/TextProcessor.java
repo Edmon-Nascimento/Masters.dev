@@ -24,4 +24,8 @@ public class TextProcessor {
             System.out.print(text.charAt(i));
         }
     }
+
+    public static void adasds(String text){
+
+    }
 }
