@@ -1,13 +1,14 @@
-import "./App.css";
-import Order from "./components/Order";
+import Order from "./Order";
+import PizzaOfTheDay from "./PizzaOfTheDay";
 
-function App() {
+
+export default function App() {
   return (
-    <>
-      <h1>Padre Gino's</h1>
-      <Order />
-    </>
+      <div>
+        <h1 className="logo">Padre Gino's Pizza</h1>
+        <Order />
+        <PizzaOfTheDay />
+      </div>
   );
-}
-
-export default App;
+};
+;
