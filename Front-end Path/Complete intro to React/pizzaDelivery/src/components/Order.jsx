@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import Pizza from "./Pizza";
 import Cart from "./Cart";
+import { useContext } from "react";
+import { CartContext } from "../context/contexts";
+
 
 // feel free to change en-US / USD to your locale
 const intl = new Intl.NumberFormat("en-US", {
@@ -13,12 +16,27 @@ export default function Order() {
   const [pizzaSize, setPizzaSize] = useState("M");
   const [pizzaTypes, setPizzaTypes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useContext(CartContext);
 
   let price, selectedPizza;
   if (!loading) {
     selectedPizza = pizzaTypes.find((pizza) => pizzaType === pizza.id);
     price = selectedPizza?.sizes?.[pizzaSize] ?? 0;
+  }
+
+  async function checkout() {
+    setLoading(true)
+
+    await fetch("api/order", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({cart})
+    })
+
+    setCart([])
+    setLoading(false)
   }
 
   useEffect(() => {
@@ -114,7 +132,7 @@ export default function Order() {
         </form>
       </div>
         {
-          loading ? <h2>LOADING …</h2> : <Cart cart={cart} />
+          loading ? <h2>LOADING …</h2> : <Cart cart={cart} checkout={checkout} />
         }
     </div>
   );
