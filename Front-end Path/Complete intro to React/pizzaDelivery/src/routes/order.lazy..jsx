@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import Pizza from "./Pizza";
-import Cart from "./Cart";
+import Pizza from "../components/Pizza";
+import Cart from "../components/Cart";
 import { useContext } from "react";
 import { CartContext } from "../context/contexts";
 
